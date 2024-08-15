@@ -1,0 +1,26 @@
+.sidebar {
+    height: calc(100vh - 50px);
+    /* background-color: yellowgreen; */
+    flex: 3;
+}
+@media (max-width:640px) {
+    .sidebar{
+        flex: 10;
+        z-index: 11111111;
+    }
+}
+
+::-webkit-scrollbar{
+    width: 2px;
+}
+::-webkit-scrollbar-track{
+    background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb{
+    background: rgb(244, 151, 1);
+box-shadow: 0 8px 32px 0 rgba(181, 182, 183, 0.37);
+backdrop-filter: blur( 1px );
+-webkit-backdrop-filter: blur( 1px );
+border-radius: 10px;
+}

@@ -1,0 +1,12 @@
+/* sw */
+.rightbarWrapper{
+    padding: 20px 20px 0 0;
+    /* background-color: aquamarine ; */
+}
+.birthdayText {
+    /* font-weight: 300; */
+    font-size: 15px;
+}
+.rightbar {
+    flex: 3.5;
+  }

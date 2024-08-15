@@ -1,0 +1,13 @@
+.loginLeft,
+.loginRight{
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    justify-content: center;
+
+
+
+}
+    /* .loginBox:focus{
+        outline: none;
+    } */

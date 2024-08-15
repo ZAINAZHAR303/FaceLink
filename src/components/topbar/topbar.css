@@ -1,0 +1,38 @@
+/* .topbarContainer{
+    height:50px;
+    background-color: #1877f2;
+    width:100%;
+
+} */
+.search{
+    font-size:20px !important;
+    margin-left: 10px;
+}
+/* .logo{
+    font-size: 24px;
+    color: white;
+} */
+
+.searchInput:focus{
+    outline: none;
+}
+.menu{
+    display: none;
+    cursor: pointer;
+    
+}
+
+@media only screen and (max-width: 640px) {
+    .menu{
+        display: block;
+        cursor: pointer;
+    }
+    .logo{
+       font-size:16px;
+    }
+}
+@media screen and (max-width:480px) {
+    .topbarIconsItem{
+        display: none;
+    }
+}
