@@ -2,16 +2,12 @@ import "./topbar.css";
 import { useState } from 'react';
 import SearchIcon from "@mui/icons-material/Search";
 import { Person, Chat, Notifications, MenuRounded } from "@mui/icons-material";
-import Profile from "../profile/Profile";
-import SideBar from "../sidebar/SideBar";
+// import Profile from "../profile/Profile";
+// import SideBar from "../sidebar/SideBar";
 function Topbar() {
 
   
-  const [showBar, setShowProfile] = useState(false);
   
-    const handleClick = () => {
-      setShowProfile(true);
-    };
   return (
     <div className="topbarContainer bg-[#1877f2] h-[50px] flex items-center sticky top-0 z-50 w-screen   ">
       <div className="topbarLeft basis-[25.1%]">
@@ -35,7 +31,7 @@ function Topbar() {
           <span className="topbarLink max-[944px]:hidden ">Homepage</span>
           <span className="topbarLink max-[944px]:hidden">Timeline</span>
         </div>
-        <div className="menu "  onClick={handleClick} >
+        <div className="menu "   >
           <MenuRounded className="menuIcon"  />
         </div>
 
