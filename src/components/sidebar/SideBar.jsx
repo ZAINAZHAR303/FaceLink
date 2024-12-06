@@ -1,9 +1,19 @@
 import "./SideBar.css"
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RssFeed,Chat,PlayCircle,Group,Bookmark,HelpOutlineOutlined,Work,Event,School} from "@mui/icons-material";
 import CloseFriends from "../friends/CloseFriends";
-import { Users } from "../../dummyData"
+// import { Users } from "../../dummyData"
+import { useDispatch, useSelector } from "react-redux";
+import { allusers } from "../../store/slices/authSlice";
 function SideBar() {
+    const dispatch = useDispatch();
+    const Users = useSelector((store)=> store.authSlice.allUsers);
+    console.log("all users in sidebar",Users);
+    // console.log("Users",Users);
+useEffect(()=>{
+    dispatch(allusers())
+},[])
+
   return (
     <div  className="sidebar  overflow-y-scroll sticky top-[50px]  ">
       <div className="sidebarWrapper p-[20px] ">
@@ -49,9 +59,16 @@ function SideBar() {
         <hr className="sideBarhr my-[20px] mx-0"></hr>
         <ul className="sidebarFriendList p-0 m-0 list-none max-sm:hidden ">
 
-        {Users.map(e =>(
-            <CloseFriends user={e} />
-        ))}
+        {/* {Array.isArray(Users) 
+    ? Users.map((e, index) => <CloseFriends key={index} user={e} />) 
+    : Users && <CloseFriends user={Users} />} */}
+        {
+            Users&& Users.map((user, index) => {
+                return (
+                    <CloseFriends key={index} user={user} />
+                )
+            })
+        }
             
             
         </ul>

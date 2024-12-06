@@ -1,13 +1,29 @@
 import "./topbar.css";
 // import { useState } from 'react';
 import SearchIcon from "@mui/icons-material/Search";
-import { Person, Chat, Notifications, MenuRounded } from "@mui/icons-material";
+import { Person, Chat, Notifications, MenuRounded, Logout } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { logout } from "../../store/slices/authSlice";
 // import Profile from "../profile/Profile";
 // import SideBar from "../sidebar/SideBar";
 function Topbar() {
+  const [currentUser, setCurrentUser] = useState({});
+  const Users = useSelector((store) => store.authSlice.user);
 
-  
-  
+
+  const dispatch = useDispatch();
+  console.log("Users in topbar", Users);
+const handleLogout = ()=>{
+  dispatch(logout());
+}
+  // Update currentUser safely when Users changes
+  useEffect(() => {
+      if (Users) {
+          setCurrentUser(Users); // Adjust this logic as needed
+      }
+  }, [Users]);
+console.log("UsersImage" , currentUser.ImageURL)
   return (
     <div className="topbarContainer bg-[#1877f2] h-[50px] flex items-center sticky top-0 z-50 w-screen   ">
       <div className="topbarLeft basis-[25.1%]">
@@ -49,8 +65,11 @@ function Topbar() {
             <Notifications />
             <span className="topbarIconBadge  ">1</span>
           </div>
+          <div>
+          <Logout onClick={handleLogout} />
+          </div>
         </div>
-        <img src="/assets/person/1.jpeg" alt="" className="h-[32px] w-[32px] rounded-[50%] object-cover cursor-pointer  " />
+        <img src={currentUser.ImageURL} alt="hlo" className="h-[32px] w-[32px] rounded-[50%] object-cover cursor-pointer  " />
         
       </div>
     </div>

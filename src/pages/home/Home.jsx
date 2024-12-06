@@ -3,6 +3,7 @@ import Topbar from '../../components/topbar/Topbar'
 import SideBar from '../../components/sidebar/SideBar'
 import RighrBar from '../../components/rightbar/RighrBar'
 import Feed from '../../components/feed/Feed'
+import Register from "../register/Register"
 import "./home.css"
 function Home() {
   return (
@@ -13,6 +14,7 @@ function Home() {
       <Feed />
       <RighrBar />
       </div>
+      
     </>
   )
 }
