@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addDoc, collection,doc, deleteDoc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection,doc, deleteDoc, getDocs, updateDoc, serverTimestamp, getDoc, arrayRemove, arrayUnion, increment } from "firebase/firestore";
 import { db } from "../../config/firebase";
 // import { db, storage } from "../../../config/firebase";
 // import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -25,6 +25,48 @@ export const getPosts = createAsyncThunk("product/getitems", async () => {
   }
 });
 
+export const updateLike = createAsyncThunk(
+  "product/updateLike",
+  async ({ productId, uid }, thunkAPI) => {
+    try {
+      const productRef = doc(db, "products", productId);
+      const productDoc = await getDoc(productRef);
+
+      if (!productDoc.exists()) {
+        throw new Error("Product not found");
+      }
+
+      const productData = productDoc.data();
+      const alreadyLiked = productData.likedBy?.includes(uid);
+
+      if (alreadyLiked) {
+        // If user already liked, decrement the like count and remove UID
+        await updateDoc(productRef, {
+          like: increment(-1),
+          likedBy: arrayRemove(uid),
+        });
+      } else {
+        // If user hasn't liked, increment the like count and add UID
+        await updateDoc(productRef, {
+          like: increment(1),
+          likedBy: arrayUnion(uid),
+        });
+      }
+
+      // Return updated product data for local state update
+      return {
+        id: productId,
+        like: alreadyLiked ? productData.like - 1 : productData.like + 1,
+        likedBy: alreadyLiked
+          ? productData.likedBy.filter((id) => id !== uid)
+          : [...(productData.likedBy || []), uid],
+      };
+    } catch (error) {
+      console.error("Error updating like:", error);
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
 
 export const updatePost = createAsyncThunk(
     "product/updatePost",
@@ -67,13 +109,12 @@ export const createPost = createAsyncThunk(
          
             
             let updatedPost  = {
-                UserImg: post.UserImg,
-                UserName: post.UserName,
                 
-              postText: post.postText,
-                createdAt: new Date(),
-                imageURL: url,
-                fileType: post.fileType,
+                like: post.like,
+                postText: post.postText,
+                createdAt: serverTimestamp() ,
+                imageURL: url || "",
+                fileType: post.fileType || "",
                 uid: post.uid,
                 
             }
@@ -149,6 +190,18 @@ const feedSlice = createSlice({
         return post
     })
     state.updatePost = null
+    });
+    builder.addCase(updateLike.fulfilled, (state, action) => {
+      state.items = state.items.map((post) => {
+        if (post.id === action.payload.id) {
+          return {
+            ...post,
+            like: action.payload.like,
+            likedBy: action.payload.likedBy,
+          };
+        }
+        return post;
+      });
     });
 
   },

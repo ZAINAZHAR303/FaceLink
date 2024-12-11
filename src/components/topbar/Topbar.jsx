@@ -23,6 +23,7 @@ const handleLogout = ()=>{
           setCurrentUser(Users); // Adjust this logic as needed
       }
   }, [Users]);
+  
 console.log("UsersImage" , currentUser.ImageURL)
   return (
     <div className="topbarContainer bg-[#1877f2] h-[50px] flex items-center sticky top-0 z-50 w-screen   ">
