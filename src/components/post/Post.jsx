@@ -8,22 +8,32 @@ import {
   TurnedIn,
 } from "@mui/icons-material";
 import { Users } from "../../dummyData";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts, updateLike } from "../../store/slices/feedSlice";
+import { fetchComments, getPosts, updateComment, updateLike } from "../../store/slices/feedSlice";
 import OptionModal from "../OptionModal";
+import CommentsPopup from "../CommentsPopup";
 function Post({ post }) {
   
   const [comment, setcomment] = useState("");
   
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-
+  // const [postComments,setPostComments] = useState([])
+  const [commentPopup, setcommentPopup] = useState(false);
   const user = useSelector(store => store.authSlice.user)
+  
+  // useEffect(()=>{
+  //   setPostComments(currentPostComments)
+  //   console.log(currentPostComments);
+  // },[currentPostComments]);
+  
+    
 const dispatch = useDispatch();
   // Close popup when clicking outside
   const closePopup = () => {
     setIsPopupVisible(false);
+    // setcommentPopup(false);
   };
 
   // Attach closePopup to document click
@@ -32,7 +42,7 @@ const dispatch = useDispatch();
     document.addEventListener("scroll", closePopup);
     return () => {
       document.removeEventListener("click", closePopup);
-      document.addEventListener("scroll", closePopup);
+      document.removeEventListener("scroll", closePopup);
     };
   }, []);
 
@@ -45,8 +55,31 @@ const dispatch = useDispatch();
     dispatch(updateLike(likeData))
     
   }
+  const commentHandler = useCallback(
+    (postid, e) => {
+      e.preventDefault();
+      if (!comment.trim()) return;
+      let commentData = {
+        uid: user.uid,
+        postid,
+        comment,
+      };
+      dispatch(updateComment(commentData));
+      setcomment("");
+    },
+    [dispatch, user.uid, comment]
+  );
+  const commentfetcher = useCallback(
+    (postid) => {
+      
+        dispatch(fetchComments(postid));
+      
+      setcommentPopup(true);
+    },
+    [dispatch]
+  );
 
-  console.log(post);
+  // console.log(post);
   return (
     <div>
       <div className="bg-blue-200 post w-full rounded-[10px] relative my-[30px] mx-0  ">
@@ -116,24 +149,24 @@ const dispatch = useDispatch();
               </span>
             </div>
             <div className="postBottomRight flex items-center">
-              <span className="postCommentText cursor-pointer border-b-[1px]  mr-[20px] border-dashed border-gray-400 text-[14px] font-thin">
+              <span onClick={()=>commentfetcher(post.id)} className="postCommentText cursor-pointer border-b-[1px]  mr-[20px] border-dashed border-gray-400 text-[14px] font-thin">
                 {" "}
                 comments
               </span>
             </div>
           </div>
           <div className="bg-gray-100 w-[90%] my-[10px] rounded-[10px] h-[60px] flex  items-center pr-[20px] ">
-            <form className="flex justify-evenly items-center h-full w-full ">
+            <form onSubmit={(e)=>commentHandler(post.id,e)} className="flex justify-evenly items-center h-full w-full ">
               <input
                 type="text"
-                name={comment}
+                
                 value={comment}
                 onChange={(e) => setcomment(e.target.value)}
                 placeholder="write a public comment"
                 className=" text-black bg-gray-100 focus: outline-none h-[100%] w-[100%]  pl-[20px] rounded-tl-[10px] rounded-bl-[10px] "
               />
               <button type="submit">
-                {" "}
+              
                 <SendRounded className="hover: cursor-pointer" />
               </button>
             </form>
@@ -158,6 +191,13 @@ const dispatch = useDispatch();
             </ul>
           </div>
         )}
+        {
+          commentPopup && (
+            
+          <CommentsPopup onclose={()=>setcommentPopup(false)}  />
+          
+          )
+        }
       </div>
     </div>
   );
