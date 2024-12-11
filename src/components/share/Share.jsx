@@ -10,6 +10,7 @@ function Share() {
   const [imageURL, setImageURL] = useState("");
   const[fileType,setfileType] = useState("")
   const [postText,setpostText] = useState("")
+  const [like, setLike] = useState(0)
   
 const dispatch = useDispatch();
 const user = useSelector(store => store.authSlice.user)
@@ -30,9 +31,7 @@ const user = useSelector(store => store.authSlice.user)
     console.log("file type: ", file.type)
     let postData = {
       uid: user.uid,
-      UserImg: user.ImageURL,
-      UserName : user.name,
-      createdAt: user.createdAt,
+      like,
       postText,
       imageURL,
       fileType,
