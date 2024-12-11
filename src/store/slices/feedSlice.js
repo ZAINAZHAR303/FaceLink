@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addDoc, collection,doc, deleteDoc, getDocs, updateDoc, serverTimestamp, getDoc, arrayRemove, arrayUnion, increment } from "firebase/firestore";
+import { addDoc, collection,doc, deleteDoc, getDocs, updateDoc, serverTimestamp, getDoc, arrayRemove, arrayUnion, increment, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 // import { db, storage } from "../../../config/firebase";
 // import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -25,6 +25,73 @@ export const getPosts = createAsyncThunk("product/getitems", async () => {
   }
 });
 
+
+
+
+export const fetchComments = createAsyncThunk(
+  "comments/fetchComments",
+  async (postid, { rejectWithValue }) => {
+    try {
+      // Reference the collection for the specific post comments
+      const commentRef = collection(db, "comments", postid, "comments");
+
+      // Fetch all documents in the comments sub-collection
+      const querySnapshot = await getDocs(commentRef);
+      console.log(querySnapshot.docs); // Check if docs are being fetched properly
+
+      // Prepare an array to hold the comments with user details
+      const commentsWithUserDetails = [];
+
+      // Fetch the user details for each comment by uid
+      for (const docSnap of querySnapshot.docs) {
+        const commentData = docSnap.data();
+        const userRef = doc(db, "users", commentData.uid);
+        const userSnap = await getDoc(userRef);
+
+        // Check if user data exists
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+
+          // Push the comment and user details into the comments array
+          commentsWithUserDetails.push({
+            id: docSnap.id,
+            comment: commentData.comment,
+            user: {
+              username: userData.name,
+              profileImage: userData.ImageURL,
+            },
+          });
+        }
+      }
+
+      // Return the comments along with user details
+      return { postid, comments: commentsWithUserDetails };
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateComment = createAsyncThunk(
+  "product/updateComment",
+  async ({postid, comment, uid}) => {
+    try {
+      let commentdata = {
+        comment: comment,
+        createAt : serverTimestamp(),
+        uid: uid,
+      }
+      // const productRef = ;
+      const commentRef = collection(db, "comments", postid, "comments");  // comments/{postid}/comments
+      await addDoc(commentRef, commentdata);
+      return { postid, commentdata };
+    }
+    catch (error) {
+      console.log("error", error);
+    }
+  }
+)
 export const updateLike = createAsyncThunk(
   "product/updateLike",
   async ({ productId, uid }, thunkAPI) => {
@@ -160,6 +227,8 @@ const feedSlice = createSlice({
   initialState: {
     items: [],
     updatePost: null,
+    comments: {},
+    commentsByPost: {},
   },
   reducers: {
     addProduct: (state, action) => {
@@ -203,6 +272,23 @@ const feedSlice = createSlice({
         return post;
       });
     });
+    builder.addCase(updateComment.fulfilled, (state, action) => {
+      state.loading = false;
+      const { postid, commentdata } = action.payload;
+
+      // If there are multiple comments per post, we can push the new comment to the array
+      if (state.comments[postid]) {
+        state.comments[postid].push(commentdata);
+      } else {
+        state.comments[postid] = [commentdata]; // Create an array if no comments exist for that post
+      }
+    })
+    .addCase(fetchComments.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      // Store comments with user details in state
+      console.log("comments in extra reducers", action.payload)
+      state.commentsByPost = action.payload.comments;
+    })
 
   },
 });

@@ -6,7 +6,7 @@
 @media (max-width:640px) {
     .sidebar{
         flex: 10;
-        z-index: 11111111;
+        z-index: 111;
     }
 }
 
