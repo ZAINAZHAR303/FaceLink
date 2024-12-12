@@ -3,24 +3,30 @@ import "./Login.css";
 import { login } from "../../store/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../components/loader/Loader";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setloading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async() => {
+    try{
     let user = {
       email,
       password,
     };
 
-    dispatch(login(user));
+   await dispatch(login(user));
+  }finally{
+    setloading(false);
+  }
   };
 
   const handleRegister = () => {
-    console.log("Register");
+    // console.log("Register");
     navigate("/signup");
   };
 
@@ -68,6 +74,11 @@ function Login() {
           </div>
         </div>
       </div>
+      {
+        loading &&(
+          <Loader />
+        )
+      }
     </div>
   );
 }

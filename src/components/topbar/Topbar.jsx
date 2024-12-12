@@ -5,6 +5,7 @@ import { Person, Chat, Notifications, MenuRounded, Logout } from "@mui/icons-mat
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { logout } from "../../store/slices/authSlice";
+import { Link } from "react-router-dom";
 // import Profile from "../profile/Profile";
 // import SideBar from "../sidebar/SideBar";
 function Topbar() {
@@ -13,7 +14,7 @@ function Topbar() {
 
 
   const dispatch = useDispatch();
-  console.log("Users in topbar", Users);
+  // console.log("Users in topbar", Users);
 const handleLogout = ()=>{
   dispatch(logout());
 }
@@ -24,9 +25,9 @@ const handleLogout = ()=>{
       }
   }, [Users]);
   
-console.log("UsersImage" , currentUser.ImageURL)
+// console.log("UsersImage" , currentUser.ImageURL)
   return (
-    <div className="topbarContainer bg-[#1877f2] h-[50px] flex items-center sticky top-0 z-50 w-screen   ">
+    <div className="topbarContainer bg-[#1877f2] h-[50px] flex items-center sticky top-0 z-50 w-[100%]   ">
       <div className="topbarLeft basis-[25.1%]">
         <span className="logo text-[24px] ml-[20px] font-bold text-white cursor-pointer ">FaceLink</span>
       </div>
@@ -45,33 +46,34 @@ console.log("UsersImage" , currentUser.ImageURL)
 
       <div className="topbarRight basis-[33.3%] max-sm:basis-[44.1%] flex items-center justify-around text-white">
         <div className="topBarLinks">
-          <span className="topbarLink max-[944px]:hidden ">Homepage</span>
-          <span className="topbarLink max-[944px]:hidden">Timeline</span>
+          <span className="topbarLink max-[944px]:hidden opacity-50 ">Homepage</span>
+          <span className="topbarLink max-[944px]:hidden opacity-50">Timeline</span>
         </div>
-        <div className="menu "   >
+        <div className="menu  "   >
           <MenuRounded className="menuIcon"  />
         </div>
 
-        <div className="topBarIcons flex ">
-          <div className="topbarIconsItem">
+        <div className="topBarIcons flex  ">
+          <div className="topbarIconsItem opacity-20">
             <Person />
             <span className="topbarIconBadge  ">1</span>
           </div>
 
-          <div className="topbarIconsItem">
+          <div className="topbarIconsItem opacity-50">
             <Chat />
             <span className="topbarIconBadge  ">1</span>
           </div>
-          <div className="topbarIconsItem">
+          <div className="topbarIconsItem opacity-20 ">
             <Notifications />
             <span className="topbarIconBadge  ">1</span>
           </div>
-          <div>
+          <div className="cursor-pointer">
           <Logout onClick={handleLogout} />
           </div>
         </div>
+        <Link to="/profile">
         <img src={currentUser.ImageURL} alt="hlo" className="h-[32px] w-[32px] rounded-[50%] object-cover cursor-pointer  " />
-        
+        </Link>
       </div>
     </div>
   );

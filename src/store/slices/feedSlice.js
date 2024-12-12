@@ -59,7 +59,7 @@ export const getPosts = createAsyncThunk(
       return data;
     } catch (error) {
       setloading(false);
-      // console.log("error fetching posts", error);
+      console.log("error fetching posts", error);
     }
   }
 );
@@ -182,7 +182,7 @@ export const updatePost = createAsyncThunk(
       // console.log("document successfully updated! in action");
       return post;
     } catch (error) {
-      // console.log("error", error);
+      console.log("error", error);
     }
   }
 );
@@ -238,7 +238,7 @@ export const createPost = createAsyncThunk(
       return { ...updatedPost, id: response.id ,user: userDetails};
     } catch (error) {
       post.setloading(false);
-      // console.log("error", error);
+      console.log("error", error);
     }
 
     return post;
@@ -253,7 +253,7 @@ export const deletePost = createAsyncThunk("product/deletePost", async (id) => {
     return id;
     // console.log("document successfully deleted! in action");
   } catch (error) {
-    // console.log("error", error);
+    console.log("error", error);
   }
 });
 

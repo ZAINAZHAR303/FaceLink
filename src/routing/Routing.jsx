@@ -8,7 +8,7 @@ import {
   import Login from "../pages/login/Login";
   import PublicRoute from "./PublicRoute";
 import Register from "../pages/register/Register";
-  
+  import Profile from "../components/profile/Profile";
   
   
   const router = createBrowserRouter([
@@ -19,6 +19,10 @@ import Register from "../pages/register/Register";
     {
       path:"/signup",
       element: <PublicRoute><Register/></PublicRoute> 
+    },
+    {
+      path: "/profile",
+      element: <PrivateRoute><Profile/></PrivateRoute>,  // replace with your own component name
     },
     {
       path:"/login",

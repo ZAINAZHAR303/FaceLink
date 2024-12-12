@@ -17,7 +17,7 @@ export const getCurrentUser = createAsyncThunk(
                   const docSnap = await getDoc(doc(db, "users",uid))
                   const dbUser = docSnap?.data()
                   store.dispatch(setUser(dbUser))
-                  console.log("dbUser",dbUser);
+                //   console.log("dbUser",dbUser);
                   setLoading(false)
                 } else{
                     setLoading(false)
@@ -51,19 +51,20 @@ export const login = createAsyncThunk(
     async (user) => {
 
         try {
-            console.log("user",user);
+            // console.log("user",user);
             
          const userCredential =   await signInWithEmailAndPassword(auth, user.email, user.password)
-         console.log("userCredential in login",userCredential.user.uid);
+        //  console.log("userCredential in login",userCredential.user.uid);
          
          const docSnap = await getDoc(doc(db, "users",userCredential.user.uid))
          const dbUser = docSnap?.data()
-         console.log("dbUser",dbUser);
+        //  console.log("dbUser",dbUser);
          
          return dbUser
 
 
         } catch (error) {
+            alert("please Enter valid Email and Password, or please signup")
              console.log("error",error);
              
         }
@@ -89,7 +90,7 @@ export const allusers = createAsyncThunk(
                 ...doc.data()
             }));
 
-            console.log("allusers", allusers);
+            // console.log("allusers", allusers);
             return allusers;
 
         } catch (error) {
@@ -104,12 +105,12 @@ export const signup  = createAsyncThunk(
     "auth/signup",
     async(user)=>{
         try {
-            console.log("user in signup action", user);
+            // console.log("user in signup action", user);
             const userCredential = await createUserWithEmailAndPassword(auth, user.email, user.password);
 
 
             const file = user.file;
-            console.log("file", file);
+            // console.log("file", file);
             const data = new FormData();
             
             data.append("file", file);
@@ -120,7 +121,7 @@ export const signup  = createAsyncThunk(
                 body: data,
             })
             const result = await res.json()
-            console.log("result", result.url);
+            // console.log("result", result.url);
             const url = result.url;
 
 
@@ -136,7 +137,7 @@ export const signup  = createAsyncThunk(
             }
 
             await setDoc(doc(db, "users", userCredential.user.uid), saveUserTodb);
-            console.log("user saved successfully")
+            // console.log("user saved successfully")
               return saveUserTodb
               
         }catch(error){
@@ -157,33 +158,33 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
-            console.log("reducer in setuser", action.payload);
+            // console.log("reducer in setuser", action.payload);
             
             state.user = action.payload
         }
     },
 extraReducers:(builder)=>{
     builder.addCase(signup.fulfilled, (state,action)=>{
-        console.log("action", action.payload);
+        // console.log("action", action.payload);
         state.user = action.payload
     })
 
     builder.addCase(login.fulfilled, (state,action)=>{
-        console.log("action in login", action.payload);
+        // console.log("action in login", action.payload);
         state.user = action.payload
     })
 
     builder.addCase(logout.fulfilled, (state,action)=>{
-        console.log("action in login", action.payload);
+        // console.log("action in login", action.payload);
         state.user = null
     })
 
     builder.addCase(getCurrentUser.fulfilled, (state,action)=>{
-        console.log("reducer case in login", action.payload);
+        // console.log("reducer case in login", action.payload);
         state.user = action.payload
     })
     builder.addCase(allusers.fulfilled, (state,action)=>{
-        console.log("reducer case in allusers", action.payload);
+        // console.log("reducer case in allusers", action.payload);
         state.allUsers = action.payload
     })
 }

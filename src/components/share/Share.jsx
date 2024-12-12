@@ -4,14 +4,15 @@ import Button from "../Button"
 import {PermMedia,Label,Room,EmojiEmotions} from "@mui/icons-material"
 import { useDispatch, useSelector } from 'react-redux'
 import { createPost, updatePost } from '../../store/slices/feedSlice'
+import Loader from '../loader/Loader'
 function Share() {
   const[file,setFile] = useState("")
-  const[loading,setLoading] = useState(false)
+  const[loading,setloading] = useState(false)
   const [imageURL, setImageURL] = useState("");
   const[fileType,setfileType] = useState("")
   const [postText,setpostText] = useState("")
   const [like, setLike] = useState(0)
-  
+  // const [ loading,setloading] = useState(false)
 const dispatch = useDispatch();
 const user = useSelector(store => store.authSlice.user)
     const post = useSelector(store => store.feedSlice.updatePost)
@@ -26,9 +27,11 @@ const user = useSelector(store => store.authSlice.user)
     }
   },[post])
 
-  const createPostHandler = ()=>{
+  const createPostHandler = async()=>{
+    
+      
     setfileType(file.type)
-    console.log("file type: ", file.type)
+    // console.log("file type: ", file.type)
     let postData = {
       uid: user.uid,
       like,
@@ -41,9 +44,10 @@ const user = useSelector(store => store.authSlice.user)
       dispatch(updatePost({ ...postData,id:post.id}))
       return
      }
-      dispatch(createPost({ ...postData,file,setLoading}))
+      dispatch(createPost({ ...postData,file,setloading}))
       setpostText("")
       setFile("")
+   
     }
 
   const handleFileClick = () => {
@@ -55,9 +59,9 @@ const user = useSelector(store => store.authSlice.user)
     <div className='share w-[100%] h-[170px] rounded-[10px] '>
       <div className="ShareWrapper p-[10px]">
         <div className="shareTop flex  items-center  ">
-            <img  className="shareProfileImg w-[50px] h-[50px] rounded-[50%] object-cover mr-[10px]  " src="/assets/person/1.jpeg" alt="" />
+            <img  className="shareProfileImg w-[50px] h-[50px] rounded-[50%] object-cover mr-[10px]  " src={user.ImageURL} alt="" />
             {/* <textarea   /> */}
-            <textarea className='shareInput border-none w-[80%] focus:outline-none' placeholder="what's in your mind shafak?" onChange={(e)=>setpostText(e.target.value)} id=""></textarea>
+            <textarea value={postText} className='shareInput border-none w-[80%] focus:outline-none' placeholder={`what's in your mind ${user.name}?`} onChange={(e)=>setpostText(e.target.value)} id=""></textarea>
         </div>
         <hr className='shareHr m-[20px]'></hr>
         <div className="shareButtom flex items-center justuify-between  ">
@@ -74,15 +78,15 @@ const user = useSelector(store => store.authSlice.user)
                 }}
             />
         </div>
-                <div className="shareoption ">
+                <div className="shareoption opacity-20 max-sm:hidden ">
                     <Label htmlColor='blue' className="shareIcon text-[18px] mr-[3px] "/>
                     <span className='ShareOptionText'>Tag</span>
                 </div>
-                <div className="shareoption ">
+                <div className="shareoption opacity-20 max-sm:hidden ">
                     <Room htmlColor='green' className="shareIcon text-[18px] mr-[3px] "/>
                     <span className='ShareOptionText'>Location</span>
                 </div>
-                <div className="shareoption ">
+                <div className="shareoption opacity-20  max-sm:hidden">
                     <EmojiEmotions htmlColor='goldenrod' className="shareIcon text-[18px] mr-[3px] "/>
                     <span className='ShareOptionText'>Feelings</span>
                 </div>
@@ -92,6 +96,11 @@ const user = useSelector(store => store.authSlice.user)
 
         </div>
       </div>
+      {
+        loading &&(
+          <Loader />
+        )
+      }
     </div>
   )
 }

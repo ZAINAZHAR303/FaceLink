@@ -8,14 +8,14 @@ import { allusers } from "../../store/slices/authSlice";
 function SideBar() {
     const dispatch = useDispatch();
     const Users = useSelector((store)=> store.authSlice.allUsers);
-    console.log("all users in sidebar",Users);
+    // console.log("all users in sidebar",Users);
     // console.log("Users",Users);
 useEffect(()=>{
     dispatch(allusers())
 },[])
 
   return (
-    <div  className="sidebar  overflow-y-scroll sticky top-[50px]  ">
+    <div  className="sidebar  overflow-y-scroll sticky top-[50px]  hidden md:block  ">
       <div className="sidebarWrapper p-[20px] ">
         <ul className="sidebarList p-0 m-0 list-none">
                 <li className="sidebarListItem flex items-center mb-[20px]">
