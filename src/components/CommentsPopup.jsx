@@ -21,7 +21,7 @@ const CommentsPopup = ({ onclose }) => {
       ref={modelref}
       onClick={CloseModel}
       className="h-screen w-screen inset-0 z-[99999] bg-[rgba(0,0,0,0.4)] fixed flex items-center justify-center">
-      <div className="w-[400px] h-[400px] rounded-lg p-4 overflow-y-scroll scroll-smooth bg-white">
+      <div className="w-[400px] h-[400px] max-sm:w-[90%] rounded-lg p-4 overflow-y-scroll scroll-smooth bg-white">
         {currentPostComments.length > 0 ? (
           currentPostComments.map((comment) => (
             <div
