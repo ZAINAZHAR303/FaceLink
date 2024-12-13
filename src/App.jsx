@@ -4,6 +4,7 @@ import Home from './pages/home/Home';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './store/slices/authSlice';
 import Routing from './routing/Routing';
+import Loader from './components/loader/Loader';
 // import Profile from './components/profile/Profile';
 // import Login from './pages/login/Login';
 // import Register from './pages/register/Register'
@@ -17,7 +18,7 @@ function App() {
 
   return (
     <div>
-    {loading ? <h1>Loading...</h1>:  <Routing />}
+    {loading ? <Loader />:  <Routing />}
     </div>
     
   );
