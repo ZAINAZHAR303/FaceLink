@@ -2,8 +2,8 @@
     position: fixed; /* Ensures the loader is overlaid on the entire screen */
     top: 0;
     left: 0;
-    width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full viewport width */
+    height: 100%; /* Full viewport height */
     display: flex;
     justify-content: center;
     align-items: center;
