@@ -25,7 +25,7 @@ function RighrBar({ profile }) {
   },[user]);
   const HomeRightBar = () => {
     return (
-      <div className="HomeRighBar  fixed hidden md:block  ">
+      <div className="HomeRighBar   hidden md:block  ">
         <div className="birthdayConatiner flex items-center  ">
           <img
             className="birthdatImg w-[40px] h-[40px] mr-[10px]"
